@@ -59,3 +59,30 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-np-svc
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+  - protocol: TCP
+    nodePort: 32002 # node
+    port: 80 # intern
+    targetPort: 80 # container
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-lb-svc
+spec:
+  selector:
+    app: nginx
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

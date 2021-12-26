@@ -43,7 +43,7 @@ curl -A "Safari" $(minikube service --url customer -n tutorial)
 curl -A "Firefox" $(minikube service --url customer -n tutorial)
 ```
 
-Dark Launches:
+Dark Launch:
 ```
 kubectl apply -f dark-launch/destination-rule-recomm-v1-v2.yml
 kubectl apply -f dark-launch/virtual-service-recommendation.yml
@@ -52,6 +52,45 @@ kubectl apply -f dark-launch/virtual-service-recommendation.yml
 kubectl logs -f `kubectl get pods -l version=v2 -o=jsonpath={.items[0].metadata.name}`
 curl $(minikube service --url recommendation -n tutorial)
 ```
+
+Egress:
+```
+kubectl apply -f dark-launch/destination-rule-recomm.yml
+kubectl apply -f dark-launch/virtual-service-recommendation.yml
+kubectl apply -f dark-launch/service-entry.yml
+
+kubectl get destinationrule,virtualservice,serviceentry
+
+#k get pods -l app=recommendation,version=v2 -o=custom-columns=NAME:.metadata.name
+kubectl logs -f `kubectl get pods -l app=recommendation,version=v3 -o=jsonpath={.items[0].metadata.name}`
+curl -m 5 $(minikube service --url customer -n tutorial)
+```
+
+Load Balancing & Timeout & Circuit Breaker:
+```
+kubectl apply -f circuit-breaker/destination-rule-recomm.yml
+kubectl apply -f circuit-breaker/virtual-service-recommendation.yml
+siege -r 2 -c 20 -v $(minikube service --url customer -n tutorial)
+
+kubectl apply -f circuit-breaker/destination-rule-recomm-traffic-policy.yml
+siege -r 2 -c 20 -v $(minikube service --url customer -n tutorial)
+
+
+kuebctl scale deployment recommendation-v4 --replicas=2
+kubectl get pods -l app=recommendation,version=v4
+kubectl exec -ti `kubectl get pods -l app=recommendation,version=v4 -o=jsonpath={.items[0].metadata.name}` -- curl localhost:8080/misbehave
+
+
+kubectl apply -f circuit-breaker/destination-rule-recomm-policy-pool-ejection.yml
+curl $(minikube service --url customer -n tutorial)
+
+kubectl apply -f circuit-breaker/destination-rule-recomm.yml
+kubectl apply -f circuit-breaker/virtual-service-recommendation-retry.yml
+while true; do curl $(minikube service --url customer -n tutorial); sleep 1; done
+
+```
+
+
 
 
 

@@ -10,10 +10,10 @@ spec:
   - route:
     - destination:
         host: recommendation
+        subset: version-v1
+      weight: 50
+    - destination:
+        host: recommendation
         subset: version-v2
-      weight: 100
-#      weight: 90
-#    - destination:
-#        host: recommendation
-#        subset: version-v1
-#      weight: 10
+      weight: 50
+# Nota: cambiar weight de forma progresiva: 10, 20, 30, 40 asi hasta llegar a 100

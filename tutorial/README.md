@@ -165,6 +165,13 @@ kubectl apply -f mtls/enable.yml
 kubectl apply -f mtls/destination-rule.yml
 
 kubectl get peerauthentication,destinationrule
+istioctl authn tls-check
+
+kubectl exec -ti `kubectl get pods -l app=customer,version=v4 -o=jsonpath={.items[0].metadata.name}` -- 
+$ apt install -y tcpdump
+$ tcpdump -vvv -A -i eth0 '((dst port 8080) and (net 127.0.0.1))'
+
+curl $(minikube service --url customer -n tutorial)
 ```
 
 

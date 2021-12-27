@@ -114,6 +114,58 @@ while true; do time curl $APP_URL; sleep 1; done
 
 Observability:
 ```
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.12/samples/addons/jaeger.yaml
+kubectl get pods,deploy,service -n istio-system
 
+istioctl dashboard jaeger
 ```
+
+
+Metrics:
+```
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.12/samples/addons/prometheus.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.12/samples/addons/grafana.yaml
+kubectl get pods,deploy,service -n istio-system
+
+istioctl dashboard grafana
+istioctl dashboard prometheus
+```
+
+Kiali:
+```
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.12/samples/addons/kiali.yaml
+kubectl get pods,deploy,service -n istio-system
+watch kubectl get pods,deploy,service -n tutorial
+
+istioctl dashboard kiali
+```
+
+# TODO
+Allow:
+```
+kubectl delete destinationrule,virtualservice,serviceentry --all
+
+kubectl apply -f allow/destination-rule-recomm-v1-v2.yml
+kubectl apply -f allow/rules.yml
+
+kubectl get destinationrule,virtualservice,serviceentry
+
+curl $(minikube service --url customer -n tutorial)
+```
+
+
+# TODO
+Deny:
+```
+```
+
+Mutual TLS:
+```
+kubectl apply -f mtls/enable.yml
+kubectl apply -f mtls/destination-rule.yml
+
+kubectl get peerauthentication,destinationrule
+```
+
+
 

@@ -31,7 +31,7 @@ kubectl apply -f canary/virtual-service-recommendation-90-10.yml
 kubectl apply -f canary/virtual-service-recommendation-50-50.yml
 kubectl get destinationrule,virtualservice
 
-while true; do curl $(minikube service --url customer -n tutorial); sleep 3; done
+while true; do curl $(minikube service --url customer -n tutorial); sleep 1; done
 ```
 
 Header match:
@@ -90,7 +90,30 @@ while true; do curl $(minikube service --url customer -n tutorial); sleep 1; don
 
 ```
 
+Http errors:
+```
+curl -m 5 $(minikube service --url customer -n tutorial)
+
+kubectl apply -f http-errors/destination-rule-recomm.yml
+kubectl apply -f http-errors/virtual-service.yml
+
+while true; do curl $(minikube service --url customer -n tutorial); sleep 1; done
+```
+
+Delays:
+```
+APP_URL=$(minikube service --url customer -n tutorial)
+curl -m 5 $APP_URL
+
+kubectl apply -f delays/destination-rule-recomm.yml
+kubectl apply -f delays/virtual-service.yml
+
+while true; do time curl $APP_URL; sleep 1; done
+```
 
 
+Observability:
+```
 
+```
 

@@ -21,8 +21,10 @@ spec:
       - env:
         - name: JAVA_OPTIONS
           value: -Xms128m -Xmx256m -Djava.net.preferIPv4Stack=true -Djava.security.egd=file:///dev/./urandom
-        image: example/preference:v2
+        image: mario21ic/preference:v2
         imagePullPolicy: IfNotPresent
+        #image: example/preference:v2
+        #imagePullPolicy: Never
         livenessProbe:
           exec:
             command:

@@ -21,8 +21,10 @@ spec:
       - env:
         - name: JAVA_OPTIONS
           value: -Xmx256m
-        image: example/recommendation:v2
-        imagePullPolicy: Never
+        image: mario21ic/recommendation:v2
+        imagePullPolicy: IfNotPresent
+        #image: example/recommendation:v2
+        #imagePullPolicy: Never
         livenessProbe:
           exec:
             command:

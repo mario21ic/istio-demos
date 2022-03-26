@@ -19,9 +19,11 @@ spec:
     spec:
       containers:
       - env:
-        image: example/recommendation:virtualized
+        image: mario21ic/recommendation:virtualized
+        #image: example/recommendation:virtualized
         args: ["-import=/go/bin/simulation.json"]
         imagePullPolicy: IfNotPresent
+        #imagePullPolicy: Never
         name: recommendation
         ports:
         - containerPort: 8080
